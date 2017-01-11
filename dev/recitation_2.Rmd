@@ -98,7 +98,9 @@ ggplot(plot_data, aes(x = number_of_people_in_room,
 
 
 As our final trick, let's use simulations to show that OLS works. We'll build on the work we did above. First, we will write down the DGP for our data: it's normally distributed with some set parameter values (if this doesn't make perfect sense, don't worry! We'll come back to this often this semester). Second, we will draw a sample, and write down the coefficients. Third, we will do this a lot of times and show that OLS gives us the proper answers.
-# OlS works!
+
+# OLS works!
+Now let's verify that OLS gives us the right number in repeated samples!
 ```{r}
 test_ols <- function(n, b0, b1, b2, seed = 
   sample(.Machine$integer.max, 1))
