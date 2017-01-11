@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "library(devtools)\ndocument()\nbuild()\ninstall()\n",
+    "created" : 1484160434538.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2928482651",
+    "id" : "CC022C2F",
+    "lastKnownWriteTime" : 1479258391,
+    "last_content_update" : 1479258391,
+    "path" : "~/GLM/package-prep/prep-package.R",
+    "project_path" : "package-prep/prep-package.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
