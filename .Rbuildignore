@@ -1,0 +1,6 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^dev
+^package-prep
+^recitation
+^draft
