@@ -1,0 +1,18 @@
+"0","```r
+library(ggplot2)
+library(data.table)
+birthday_problem <- function(npeople,  
+  seed = sample.int(.Machine$integer.max, 1))
+{
+  days <- seq(1, 365, 1)
+  room <- sample(days, npeople, replace = TRUE)
+  ifelse(length(unique(room)) < npeople, 1, 0)
+}
+#birthday_problem(npeople = 24)
+
+simulate_birthday_problem <- function(nsims, npeople)
+{
+  sum(replicate(nsims, birthday_problem(npeople = npeople)))/nsims
+}
+simulate_birthday_problem(nsims = 1000, npeople = 24)
+```"

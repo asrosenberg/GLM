@@ -1,0 +1,5 @@
+"0","```r
+library(ggplot2)
+positions <- replicate(1000, sum(runif(16, -1, 1)))
+qplot(positions, geom = \"histogram\") + theme_bw()
+```"
