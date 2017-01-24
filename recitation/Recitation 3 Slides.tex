@@ -1,0 +1,288 @@
+\documentclass{beamer}
+\mode<presentation> { \setbeamercovered{invisible} 
+\usetheme{Copenhagen}}
+\makeatletter
+\usepackage{amsmath}
+\def\pdftex@driver{pdftex.def}
+\ifx\Gin@driver\pdftex@driver
+  \def\pgfsys@color@unstacked#1{%
+    \pdfliteral{\csname\string\color@#1\endcsname}%
+  }
+\fi
+\makeatother
+
+\author{Drew Rosenberg}
+\institute{Ohio State University}
+\title{Deriving and Maximizing Common GLMs}
+\subtitle{PS 7552}
+\date{}
+
+\begin{document}
+\bibliographystyle{apsr}
+
+\frame{\titlepage}
+
+\begin{frame}
+\frametitle{Gaussian Distribution}
+You observe a sample of $n$ iid realizations $y_{i} \in \{  y_{1} \ldots y_{n} \}$ of a variable $ Y \sim \mathcal{N} \left( \mu, \sigma^{2} \right)$, i.e. 
+\begin{equation*}
+\uncover<2>{f\left( y_{i} | \mu, \sigma^{2} \right) = \left(2\pi\sigma^{2}\right)^{-1/2} \text{exp} \left(-\frac{1}{2} \frac{\left(y_{i} - \mu\right)^{2}}{\sigma^{2}} \right).}
+\end{equation*}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian}
+What is the likelihood of having observed this sample, given that the observations were independently and identically distributed? 
+\begin{align}
+\uncover<2,3,4>{\mathcal{L}\left(\mu, \sigma^{2} | y_{i}\right) &= \prod_{i=1}^{n} f\left( y_{i} | \mu, \sigma \right) \label{eq:norm1}} \\
+\uncover<3,4>{&= \prod_{i=1}^{n} \left(2\pi\sigma^{2}\right)^{-1/2} \text{exp} \left(-\frac{1}{2} \frac{\left(y_{i} - \mu\right)^{2}}{\sigma^{2}} \right) \label{eq:norm2}} \\
+\uncover<4>{&= \left(2\pi\sigma^{2}\right)^{-n/2} \text{exp} \left(-\frac{1}{2\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \right) \label{eq:norm3}}
+\end{align}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Gaussian}
+What is the log likelihood? 
+\begin{align}
+\uncover<2,3,4>{\text{ln} \mathcal{L}\left(\mu, \sigma^{2} | y_{i}\right) &= \text{ln} \left( \left(2\pi\sigma^{2}\right)^{-n/2} \right) \notag\\
+& \quad + \text{ln} \left( \text{exp} \left(-\frac{1}{2\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \right)\right) \label{eq:norm4}}\\
+\uncover<3,4>{&= -\frac{n}{2}\text{ln}\left(2\pi\sigma^{2}\right) -\frac{1}{2\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2}\label{eq:norm5}}\\
+\uncover<4>{&= -\frac{n}{2}\text{ln}\left(2\pi\right) -\frac{n}{2}\text{ln}\left(\sigma^{2}\right) -\frac{1}{2\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \label{eq:norm6} }
+\end{align}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian}
+\uncover<1,2,3,4,5>{What is the score function for $\mu$? }
+\begin{align}
+\uncover<2,3,4,5>{S\left(\mu\right) &= -\frac{\partial}{\partial \mu} \left(\frac{n}{2}\text{ln}\left(2\pi\right)\right) - \frac{\partial}{\partial \mu}\left(\frac{n}{2}\text{ln}\left(\sigma^{2}\right)\right)  \notag \\
+& \quad - \frac{\partial}{\partial \mu}\left(\frac{1}{2\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2}\right) \label{eq:norm7}}\\
+\uncover<3,4,5>{&= \left[\left(2\right) \left(-\frac{1}{2\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)\right)\right] \left(-1\right)\label{eq:norm8}}\\ \pause
+\uncover<4,5>{&= \frac{1}{\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)\label{eq:norm9}}\\
+\uncover<5>{&=  \frac{1}{\sigma^{2}} \left(\sum_{i=1}^{n} y_{i} - n\mu\right)\label{eq:norm10}}
+\end{align}
+
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian}
+What is $\hat{\mu}_{MLE}$? 
+\begin{align}
+\uncover<2,3,4,5>{0 &= \frac{1}{\sigma^{2}} \left(\sum_{i=1}^{n} y_{i} - n\mu\right)\label{eq:norm11}}\\ 
+\uncover<3,4,5>{0 &= \sum_{i=1}^{n} y_{i} - n\mu \label{eq:norm12}}\\
+\uncover<4,5>{n\mu &=\sum_{i=1}^{n} y_{i} \label{eq:norm13}}\\ 
+\uncover<5>{\hat{\mu}_{MLE} &= \frac{1}{n} \sum_{i=1}^{n} y_{i} \label{eq:norm14}}
+\end{align}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian}
+What is the score function for $\sigma$? 
+\begin{align}
+\uncover<2,3,4,5>{S\left(\sigma^{2}\right) &=  -\frac{\partial}{\partial \sigma^{2}} \left(\frac{n}{2}\text{ln}\left(2\pi\right)\right) - \frac{\partial}{\partial \sigma^{2}}\left(\frac{n}{2}\text{ln}\left(\sigma^{2}\right)\right) \notag \\ 
+& \quad -\frac{\partial}{\partial \sigma^{2}}\left(\frac{1}{2\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2}\right) \label{eq:sigma1}}\\ 
+\uncover<3,4,5>{&=  -\frac{n}{2\sigma^{2}} - \left[\frac{1}{2} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \right]\frac{\partial}{\partial \sigma^{2}}\left(\frac{1}{\sigma^{2}}\right) \label{eq:sigma2}}\\ 
+\uncover<4,5>{&=  -\frac{n}{2\sigma^{2}} +  \left[\frac{1}{2} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \right] \left(\frac{1}{\left(\sigma^{2}\right)^{2}}\right) \label{eq:sigma3}}\\ 
+\uncover<5>{&=  \frac{1}{2\sigma^{2}}\left( \frac{1}{\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} - n \right) \label{eq:sigma4}}
+\end{align}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian}
+Find $\hat{\sigma}_{MLE}$.
+\begin{align}
+\uncover<2,3,4,5,6>{0 &= \frac{1}{2\sigma^{2}}\left( \frac{1}{\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} - n \right)\label{eq:sigma5}}\\ 
+\uncover<3,4,5,6>{0 &=  \frac{1}{\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} - n \label{eq:sigma6}}\\ 
+\uncover<4,5,6>{n &= \frac{1}{\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \label{eq:sigma7}}\\ 
+\uncover<5,6>{\hat{\sigma}_{MLE}^{2} &= \frac{1}{n} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \label{eq:sigma8}}\\ 
+\uncover<6>{\hat{\sigma}_{MLE}^{2} &= \frac{1}{n} \sum_{i=1}^{n} \left(y_{i} - \hat{\mu}_{MLE}\right)^{2} \label{eq:sigma9}}
+\end{align}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian}
+How do we know $\hat{\sigma}_{MLE}$ is a maximum?
+\begin{align}
+\uncover<2,3,4>{ \frac{\partial^{2}\text{ln}\mathcal{L}}{\partial\left(\sigma^{2}\right)^{2}} &= \frac{\partial^{2}}{\partial\sigma^{2}} \left(\frac{1}{2\sigma^{2}}\left( \frac{1}{\sigma^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} - n \right) \right) \label{eq:sigma10}}\\ 
+\uncover<3,4>{&= \frac{\partial^{2}}{\partial\sigma^{2}} \left(\frac{1}{2\left(\sigma^{2}\right)^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2}\right) - \frac{\partial^{2}}{\partial\sigma^{2}} \left(\frac{n}{2\sigma^{2}}\right) \label{eq:sigma11}}\\ 
+\uncover<4>{&= -\frac{1}{\left(\sigma^{2}\right)^{3}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} + \frac{n}{2\left(\sigma^{2}\right)^{2}}\label{eq:sigma12}}
+\end{align}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Gaussian}
+$\hat{\sigma}^{2}$ is a maximum if equation~\ref{eq:sigma12}, evaluated at $\hat{\sigma}_{MLE}^{2}$, is less than zero:
+\begin{align}
+\uncover<2,3,4,5,6>{\frac{1}{\hat{\sigma}_{MLE}^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} + \frac{n}{2} &< 0\label{eq:sigma13}}\\ 
+\uncover<3,4,5,6>{ \frac{n}{2}  &< \frac{1}{\hat{\sigma}_{MLE}^{2}} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \label{eq:sigma14}}\\ 
+\uncover<4,5,6>{\frac{\hat{\sigma}_{MLE}^{2}}{2}  &< \frac{1}{n} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \label{eq:sigma15}}\\
+\uncover<5,6>{\frac{1}{2}\frac{1}{n} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} &= \frac{1}{n} \sum_{i=1}^{n} \left(y_{i} - \mu\right)^{2} \label{eq:sigma16}}\\
+\uncover<6>{\frac{1}{2} &< 1 \label{eq:sigma17}.}
+\end{align}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Bernoulli}
+You observe a series of $n$ iid observations $x_{i}$, each of which is distributed $\text{Bern}\left(\pi\right)$, i.e.
+\begin{equation}
+\uncover<2>{f\left(x_{i}\ | \pi \right) = \pi^{x_{i}}\left(1-\pi \right)^{1-x_{i}}\notag.}
+\end{equation}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Bernoulli}
+What is the likelihood? 
+\begin{align}
+\uncover<2,3,4,5>{\mathcal{L}\left(\pi | x_{i}\right) &= \prod_{i=1}^{n} f\left(x_{i}\ | \pi \right) \label{eq:bern1}}\\ 
+\uncover<3,4,5>{&= \prod_{i=1}^{n} \pi^{x_{i}}\left(1-\pi \right)^{1-x_{i}} \label{eq:bern2}}\\ 
+\uncover<4,5>{&= \pi^{\sum_{i=1}^{n}x_{i}}\left(1-\pi \right)^{\sum_{i=1}^{n}\left(1-x_{i}\right)}\label{eq:bern3}}\\ 
+\uncover<5>{&= \pi^{\sum_{i=1}^{n}x_{i}}\left(1-\pi \right)^{n - \sum_{i=1}^{n}x_{i}}\label{eq:bern4}}
+\end{align}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Bernoulli}
+What is the log-likelihood? 
+\begin{align}
+\uncover<2,3>{\text{ln}\mathcal{L}\left(\pi | x_{i}\right) &= \text{ln}\left(\pi^{\sum_{i=1}^{n}x_{i}}\left(1-\pi \right)^{n - \sum_{i=1}^{n}x_{i}}\right) \label{eq:bern5}}\\ 
+\uncover<3>{&= \sum_{i=1}^{n}x_{i} \text{ln}\pi + \left(n - \sum_{i=1}^{n}x_{i} \right) \text{ln} \left(1-\pi\right) \label{eq:bern6}}
+\end{align}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Bernoulli}
+What is the score function? 
+\begin{align}
+\uncover<2,3>{\frac{\partial\text{ln}\mathcal{L}}{\partial\pi} &= \frac{\partial}{\partial\pi}\left(\sum_{i=1}^{n}x_{i} \text{ln}\pi\right) +\frac{\partial}{\partial\pi} \left(\left(n - \sum_{i=1}^{n}x_{i} \right) \text{ln} \left(1-\pi\right)\right)\label{eq:bern7}}\\ 
+\uncover<3>{&= \frac{\sum_{i=1}^{n}x_{i}}{\pi} - \frac{n - \sum_{i=1}^{n}x_{i}}{1-\pi}\label{eq:bern8}}
+\end{align}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Bernoulli}
+What is the $\hat{\pi}_{MLE}$? 
+\begin{align}
+\uncover<2,3,4,5,6>{\frac{\sum_{i=1}^{n}x_{i}}{\pi} - \frac{n - \sum_{i=1}^{n}x_{i}}{1-\pi} &=0 \label{eq:bern9}}\\ 
+\uncover<3,4,5,6>{\frac{n - \sum_{i=1}^{n}x_{i}}{1-\pi} &= \frac{\sum_{i=1}^{n}x_{i}}{\pi} \label{eq:bern10}}\\
+\uncover<4,5,6>{\pi n - \pi \sum_{i=1}^{n}x_{i} &= \sum_{i=1}^{n}x_{i} - \pi \sum_{i=1}^{n}x_{i} \label{eq:bern11}}\\
+\uncover<5,6>{\pi n &= \sum_{i=1}^{n}x_{i} \label{eq:bern12}}\\ 
+\uncover<6>{\hat{\pi}_{MLE} &= \frac{1}{n}\sum_{i=1}^{n}x_{i}\label{eq:bern13}}
+\end{align}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Bernoulli}
+Is this estimate a maximum? 
+\begin{align}
+\uncover<2,3,4,5,6>{\frac{\partial^{2}\text{ln}\mathcal{L}}{\partial\pi^{2}} &=  \frac{\partial}{\partial\pi} \left(\frac{\sum_{i=1}^{n}x_{i}}{\pi}\right) -\frac{\partial}{\partial\pi}\left( \frac{n - \sum_{i=1}^{n}x_{i}}{1-\pi}\right) \label{eq:bern14}}\\ 
+\uncover<3,4,5,6>{&=  - \frac{\sum_{i=1}^{n}x_{i}}{\pi^{2}} - \left(n - \sum_{i=1}^{n} x_{i}\right) \frac{\partial}{\partial\pi} \left(\frac{1}{1-\pi}\right)\label{eq:bern15}}\\ 
+\uncover<4,5,6>{&= - \frac{\sum_{i=1}^{n}x_{i}}{\pi^{2}} - \left(n - \sum_{i=1}^{n} x_{i}\right) \left(\frac{-\frac{\partial}{\partial\pi}\left(1-\pi\right)}{\left(1-\pi\right)^{2}}\right)\label{eq:bern16}}\\ 
+\uncover<5,6>{&= - \frac{\sum_{i=1}^{n}x_{i}}{\pi^{2}} - \left(n - \sum_{i=1}^{n} x_{i}\right) \left(\frac{-\left(0-1\right)}{\left(1-\pi\right)^{2}}\right) \label{eq:bern17}}\\  
+\uncover<6>{&= - \frac{\sum_{i=1}^{n}x_{i}}{\pi^{2}} - \frac{n - \sum_{i=1}^{n} x_{i}}{\left(1-\pi\right)^{2}}\label{eq:bern18}}
+\end{align}
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Bernoulli}
+Find the observed Fisher information.
+\begin{align}
+\uncover<2,3,4,5>{I\left(\hat{\pi}\right) &= - \left( - \frac{\sum_{i=1}^{n}x_{i}}{\pi^{2}} - \frac{n - \sum_{i=1}^{n} x_{i}}{\left(1-\pi\right)^{2}}\right)\label{eq:bern19}}\\ 
+\uncover<3,4,5>{&= \frac{\sum_{i=1}^{n}x_{i}}{\pi^{2}} + \frac{n - \sum_{i=1}^{n} x_{i}}{1 - 2\pi + \pi^{2}}\label{eq:bern20}}\\
+\uncover<4,5>{&= \frac{\sum_{i=1}^{n}x_{i} - 2\pi\sum_{i=1}^{n}x_{i} + \pi^{2}\sum_{i=1}^{n}x_{i} + \pi^{2}n - \pi^{2}\sum_{i=1}^{n}x_{i}}{\pi^{2}\left(1-\pi\right)^{2}}\label{eq:bern21}}\\ 
+\uncover<5>{&= \frac{\sum_{i=1}^{n}x_{i} - 2\pi\sum_{i=1}^{n}x_{i} + \pi^{2}n}{\pi^{2}\left(1-\pi\right)^{2}} \label{eq:bern22} }
+\end{align}
+
+\end{frame}
+
+\begin{frame}
+\frametitle{Bernoulli}
+Observed Fisher information, cont'd.
+\begin{align}
+\uncover<2,3,4,5>{I\left(\hat{\pi}\right) &= \frac{\left(\sum_{i=1}^{n}x_{i} - 2\pi\sum_{i=1}^{n}x_{i} + \pi^{2}n\right)\frac{1}{n}}{\left(\pi^{2}\left(1-\pi\right)^{2}\right)\frac{1}{n}}\label{bern23}}\\ 
+\uncover<3,4,5>{&= \frac{\pi - 2\pi^{2} + \pi^{2}}{\left(\pi^{2}\left(1-\pi\right)^{2}\right)\frac{1}{n}}\label{eq:bern24}}\\ 
+\uncover<4,5>{&= \frac{\pi\left(1-\pi\right)}{\left(\pi^{2}\left(1-\pi\right)^{2}\right)\frac{1}{n}}\label{eq:bern25}}\\
+\uncover<5>{&= \frac{n}{\pi\left(1-\pi\right)}\label{eq:bern26}}
+\end{align}
+
+\end{frame}
+
+
+\begin{frame}
+\frametitle{Bernoulli}
+Find the variance and standard error of the MLE for $\pi$.
+\begin{align}
+\uncover<2,3,4,5,6>{V\left(\hat{\pi}_{MLE}\right) &= \left[I\left(\hat{\pi}_{MLE}\right)\right]^{-1}\label{eq:bern27}}\\ 
+\uncover<3,4,5,6>{&= \left[ \frac{n}{\pi\left(1-\pi\right)}\right]^{-1}\label{eq:bern28}}\\ 
+\uncover<4,5,6>{&= \frac{\pi\left(1-\pi\right)}{n}\label{eq:bern29}}\\ 
+\uncover<5,6>{se\left(\hat{\pi}_{MLE}\right)&= \sqrt{V\left(\hat{\pi}_{MLE}\right)}\label{eq:bern30}}\\ 
+\uncover<6>{&= \frac{\sqrt{\hat{\pi}\left(1-\hat{\pi}\right)}}{\sqrt{n}}\label{eq:bern31} }
+\end{align}
+\end{frame}
+
+
+%\begin{frame}
+%\frametitle{Poisson}
+%You observe a sample of $n$ iid realizations $y_{i} \in \{  y_{1} \ldots y_{n} \}$ of a variable $ Y \sim \text{Pois} \left( \boldsymbol{\lambda} \right)$, and you collect data on $k-1$ predictors. You have organized this information into an $n \times k$ matrix $\mathbf{X}$ (which includes a column vector of ones). Find $S\left(\boldsymbol{\beta}\right)$, where $\boldsymbol{\lambda} = \text{exp}\left(\mathbf{X}\boldsymbol{\hat{\beta}}\right)$. For each $y_{i}$, the density is given by 
+%\begin{align*}
+%\uncover<2,3>{f\left(y_{i} | \lambda \right) &= \frac{\text{exp}\left(-\lambda\right)\lambda^{y_{i}}}{y_{i}!}\notag\\ \pause
+%&= \frac{\text{exp}\left(-\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)\right) \text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)^{y_{i}}}{y_{i}!},}
+%\end{align*}
+%\uncover<3>{where $\textbf{x}_{i}$ is a $k \times 1$ column vector of predictor values for unit $i$.}
+%\end{frame}
+%
+%
+%\begin{frame}
+%\frametitle{Poisson}
+%What is the likelihood? 
+%\begin{align}
+%\uncover<2,3>{\mathcal{L}\left(\boldsymbol{\beta} | y_{i}, \textbf{x}_{i}\right) &= \prod_{i=1}^{n} \frac{\text{exp}\left(-\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)\right) \text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)^{y_{i}}}{y_{i}!} \label{eq:pois1}}\\ 
+%\uncover<3>{&= \prod_{i=1}^{n} \frac{\text{exp}\left(-\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)\right) \text{exp}\left(y_{i}\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)}{y_{i}!} \label{eq:pois2}}
+%\end{align}
+%
+%\end{frame}
+%
+%
+%\begin{frame}
+%\frametitle{Poisson}
+%What is the log-likelihood?
+%\begin{align}
+%\uncover<2,3,4>{\text{ln}\mathcal{L}\left(\boldsymbol{\beta} | y_{i}, \textbf{x}_{i}\right) &= \text{ln}\left(\prod_{i=1}^{n} \frac{\text{exp}\left(-\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)\right) \text{exp}\left(y_{i}\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)}{y_{i}!}\right) \label{eq:pois3}}\\ 
+%\uncover<3,4>{&= \sum_{i=1}^{n} -\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right) +  \sum_{i=1}^{n}y_{i}\textbf{x}_{i}^{'}\boldsymbol{\beta} - \sum_{i=1}^{n}y_{i}!\label{eq:pois4}}\\ 
+%\uncover<4>{&=  \sum_{i=1}^{n} \left(y_{i}\textbf{x}_{i}^{'}\boldsymbol{\beta} -\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right) - y_{i}!\right)}
+%\end{align}
+%
+%\end{frame}
+%
+%\begin{frame}
+%\frametitle{Poisson}
+%What is the score function? 
+%\begin{align}
+%\uncover<2,3,4,5>{S\left(\boldsymbol{\beta}\right) &= \frac{\partial}{\partial \boldsymbol{\hat{\beta}}} \left( \sum_{i=1}^{n} \left(y_{i}\textbf{x}_{i}^{'}\boldsymbol{\beta} -\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right) - y_{i}!\right)\right)\label{eq:pois5}}\\ 
+%\uncover<3,4,5>{&= \sum_{i=1}^{n} \left(\frac{\partial}{\partial \boldsymbol{\hat{\beta}}}\left( y_{i}\textbf{x}_{i}^{'}\boldsymbol{\beta}\right) - \frac{\partial}{\partial \boldsymbol{\hat{\beta}}}\left(\text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)\right) - \frac{\partial}{\partial \boldsymbol{\hat{\beta}}}\left(y_{i}!\right)\right)\label{eq:pois6}}\\ 
+%\uncover<4,5>{&= \sum_{i=1}^{n} \left(y_{i}\textbf{x}_{i}^{'} - \text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right)\textbf{x}_{i} \right)\label{eq:pois7}}\\ 
+%\uncover<5>{&= \sum_{i=1}^{n} \left(y_{i} - \text{exp}\left(\textbf{x}_{i}^{'}\boldsymbol{\beta}\right) \textbf{x}_{i} \right)}
+%\end{align}
+%\end{frame}
+%
+%
+
+
+\end{document} 
