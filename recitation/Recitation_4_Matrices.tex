@@ -1,0 +1,310 @@
+\documentclass[12pt, letterpaper]{article}
+\usepackage[margin=0.8in]{geometry}
+\usepackage{graphicx, subfigure, float}
+\usepackage{amsmath, amssymb, amsfonts, bm}
+\usepackage{verbatim}
+\usepackage{setspace}
+\usepackage{fancyhdr}
+\usepackage{multirow, multicol}
+\usepackage[retainorgcmds]{IEEEtrantools}
+
+\pagestyle{fancy}
+
+\lhead{PO SC 7552 Recitation}
+\rhead{4. Matrix Algebra}
+
+\begin{document}
+
+\title{Review of Matrix Algebra for Regression \\ \Large{Recitation, PS 7552}}
+\author{Drew Rosenberg}
+\date{}
+\maketitle
+
+\section{Rules for Matrices}
+\subsection{Addition, Subtraction}
+\begin{itemize}
+\item To add or subtract two matrices, they must have the same dimensions.
+
+\item To add (subtract) two matrices, take the sum (difference) element-wise. Where 
+$\mathbf{A} = \left[
+\begin{array}{cc}
+a_{11} & a_{12} \\
+a_{21} & a_{22} 
+\end{array} \right]$ and 
+$\mathbf{B} = \left[
+\begin{array}{cc}
+b_{11} & b_{12} \\
+b_{21} & b_{22} 
+\end{array} \right]$, their sum is given by
+\begin{equation*}
+\mathbf{A} + \mathbf{B}  =  \left[
+\begin{array}{cc}
+(a_{11}+ b_{11}) & (a_{12}+ b_{12}) \\
+(a_{21}+ b_{21}) & (a_{22}+ b_{22})
+\end{array} \right].
+\end{equation*}
+(The same goes for subtraction.)
+
+\item Matrix addition is commutative:
+\begin{equation*}
+\mathbf{A}+\mathbf{B} = \mathbf{B}+\mathbf{A}
+\end{equation*}
+
+\item Matrix addition is associative:
+\begin{equation*}
+\left(\mathbf{A}+ \mathbf{B}\right)+ \mathbf{C} = \mathbf{A}+ \left(\mathbf{B}+ \mathbf{C}\right) = \mathbf{A}+ \mathbf{B}+ \mathbf{C}
+\end{equation*}
+\end{itemize}
+
+
+\subsection{Multiplication}
+\begin{itemize}
+
+\item To multiply two matrices, they must be conformable, which means that the number of columns of the matrix that is premultiplied must be equal to the number of rows in the matrix that is postmultiplied. For instance, if $\text{dim}\left(\mathbf{A}\right) = m \times n$ ($m$ rows and $n$ columns), if you are premultiplying $\mathbf{B}$ by $\mathbf{A}$, i.e., multiplying $\mathbf{A}\mathbf{B}$, then $\text{dim}\left(\mathbf{B}\right) = n \times p$.
+
+\item Where $
+\mathbf{A} = \left[
+\begin{array}{cc}
+a_{11}& a_{12} 
+\end{array} \right] $ and 
+$\mathbf{B} = \left[
+\begin{array}{ccc}
+b_{11} & b_{12} & b_{13} \\
+b_{21} & b_{22} & b_{23} 
+\end{array} \right]$, their product is given by
+
+\begin{equation*}
+\mathbf{A} \mathbf{B}  =  \left[
+\begin{array}{ccc}
+(a_{11}b_{11} + a_{12}b_{21}) & (a_{11}b_{12} + a_{12}b_{22}) & (a_{11}b_{13} + a_{12}b_{23}) \\
+\end{array} \right].
+\end{equation*}
+
+\item Where $x$ is a scalar, $x\mathbf{A} = \left[
+\begin{array}{cc}
+a_{11}x& a_{12}x 
+\end{array} \right]$.
+
+\item For two vectors $u$ and $v$ of equal length $n$, their dot product, or inner product returns a single number: $uv = \left[u_{1}v_{1} + u_{2}v_{2} + \ldots + u_{n}v_{n}\right] = \sum_{i=1}^{n} u_{i}v_{i}$.
+
+\item For two vectors $u$ and $v$ of equal length $n$, their outer product returns an $n \times n$ matrix.
+
+\item Matrix multiplication is associative:
+\begin{equation*}
+\left(\mathbf{A}\mathbf{B}\right)\mathbf{C} = \mathbf{A}\left(\mathbf{B}\mathbf{C}\right) = \mathbf{A}\mathbf{B}\mathbf{C}
+\end{equation*}
+
+\item Matrix multiplication is distributive:
+\begin{equation*}
+\mathbf{A}\left(\mathbf{B}+\mathbf{C}\right) = \mathbf{A}\mathbf{B} + \mathbf{A}\mathbf{C} 
+\end{equation*}
+(The same goes for postmultiplication.)
+
+\item Matrix multiplication is not commutative (except for multiplication with scalars):
+\begin{equation*}
+\mathbf{A}\mathbf{B} \neq \mathbf{B}\mathbf{A}
+\end{equation*}
+
+\item Where $\mathbf{I}$ is the identity matrix, given by
+\begin{equation*}
+\mathbf{I} = \left[
+\begin{array}{ccc}
+1 & 0 & 0 \\
+0& 1 & 0 \\
+0 & 0 & 1
+\end{array} \right]
+\end{equation*}
+for a $3\times 3$ matrix, 
+\begin{equation*}
+\mathbf{A}\mathbf{I} = \mathbf{I}\mathbf{A} = \mathbf{A}
+\end{equation*}.
+\end{itemize}
+
+\subsection{Transposes}
+\begin{itemize}
+\item Where $\mathbf{A}$ is the following matrix
+\begin{equation*}
+\mathbf{A} = \left[
+\begin{array}{ccc}
+a_{11}& \ldots & a_{1k} \\
+\vdots & \ddots & \vdots \\
+a_{n1} & \ldots & a_{nk}
+\end{array} \right],
+\end{equation*}
+its transpose $\mathbf{A}^\intercal$ is given by
+\begin{equation*}
+\mathbf{A}^\intercal = \left[
+\begin{array}{ccc}
+a_{11}& \ldots & a_{n1} \\
+\vdots & \ddots & \vdots \\
+a_{1k} & \ldots & a_{nk}
+\end{array} \right].
+\end{equation*}
+\item Where $\mathbf{B}$ is conformable to $\mathbf{A}$, then the following properties hold:
+\begin{IEEEeqnarray*}{rCl}
+(\mathbf{A}^\intercal)^\intercal & = & \mathbf{A} \\
+\left(\mathbf{A} + \mathbf{B}\right)^\intercal & = & \mathbf{A}^\intercal + \mathbf{B}^\intercal \\
+\left(\mathbf{A}\mathbf{B}\right)^\intercal & = & \mathbf{B}^\intercal \mathbf{A}^\intercal
+\end{IEEEeqnarray*}
+
+\item Also, $\mathbf{A}\mathbf{A}^\intercal$ and $\mathbf{A}^\intercal\mathbf{A}$ are symmetric matrices.
+
+\end{itemize}
+\subsection{Inverses, Determinants, and Rank}
+
+\begin{itemize}
+\item If $\mathbf{A}$ is a square matrix ($n \times n$) and it is nonsingular, i.e. it has an inverse $\mathbf{A}^{-1}$, then $\mathbf{A}\mathbf{A}^{-1} = \mathbf{A}^{-1}\mathbf{A} = \mathbf{I}$.
+
+\item Inverse matrices are useful for solving systems of equations. Where $\mathbf{A}$ is an $n\times k$ matrix, $\mathbf{x}$ is a $k \times 1$ column vector of unknowns, and $\mathbf{y}$ is an $n \times 1$ column vector, we can use $\mathbf{A}^{-1}$ to solve for $\mathbf{x}$:
+\begin{IEEEeqnarray*}{rCl}
+\mathbf{A}\mathbf{x} & = & \mathbf{y} \\
+\mathbf{x} & = & \mathbf{A}^{-1}\mathbf{y} 
+\end{IEEEeqnarray*}
+
+\item If the $\mathbf{A}$ has a vanishing determinant, i.e. $|\mathbf{A}| = 0$, then $\mathbf{A}$ is singular, $\mathbf{A}$ it can not be inverted, and a unique solution to $\mathbf{x} =  \mathbf{A}^{-1}\mathbf{y} $ does not exist.
+
+\item The rank of a matrix is the maximum number of linearly independent rows or columns (whichever is fewer) in the matrix. If your $\mathbf{X}$ matrix of observations is not of full rank, then one of the columns is a linear combination of the other columns. 
+
+\item If a matrix is not of full rank, its determinant will be zero.
+
+\item For a $2\times 2$ matrix $\mathbf{A} = \left[
+\begin{array}{cc}
+a & b \\
+c & d 
+\end{array} \right]$, $\mathbf{A}^{-1} =  \frac{1}{|\mathbf{A}|} $\phantom{}$ \left[
+\begin{array}{cc}
+d & -b \\
+-c & a 
+\end{array} \right]$, where $|\mathbf{A}| = ad - bc$.
+
+\end{itemize}
+
+\subsection{Calculus}
+
+\begin{itemize} 
+
+\item If $\mathbf{A}$ is an $n\times k$ matrix and $\mathbf{x}$ is a $k \times 1$ vector, then:
+\begin{IEEEeqnarray*}{rCl}
+\frac{\partial \mathbf{A}\mathbf{x}}{\partial\mathbf{x}} &=& \mathbf{A}^\intercal \\
+\frac{\partial \mathbf{x}^\intercal \mathbf{A}}{\partial\mathbf{x}} &=& \mathbf{A} \\
+\frac{\partial \mathbf{x}^\intercal \mathbf{A}\mathbf{x}}{\partial\mathbf{x}} &=& \left(\mathbf{A} + \mathbf{A}^\intercal \right)\mathbf{x}\\
+\end{IEEEeqnarray*}
+
+\item And if $\mathbf{A}$ is symmetric, then
+\begin{IEEEeqnarray*}{rCl}
+\frac{\partial \mathbf{x}^\intercal \mathbf{A}\mathbf{x}}{\partial\mathbf{x}} &=& 2\mathbf{A}\mathbf{x}\\
+\end{IEEEeqnarray*}
+\end{itemize}
+
+\subsection{The Linear Model} 
+
+\begin{itemize}
+\item $\mathbf{Q} = \left(\mathbf{X}^\intercal \mathbf{X}\right)$ What is this? (cross-product of the X's)
+\item $\mathbf{A} = \mathbf{Q}^{-1}\mathbf{X}^\intercal$ is the coefficient maker ($\mathbf{A}\mathbf{y} = \hat{\boldsymbol{\beta}}$)
+\item $\mathbf{N} = \mathbf{X}\mathbf{A}$ is the projection matrix ($\mathbf{N}\mathbf{y} = \hat{\mathbf{y}}$)
+\item $\mathbf{M} = \mathbf{I}_{n} - \mathbf{N}$ is the residual maker ($\mathbf{M}\mathbf{y} = \hat{\boldsymbol{\varepsilon}}$)
+\end{itemize}
+
+\newpage
+
+\section{Applying What We Know}
+
+\begin{enumerate} 
+
+\item Deriving parameter estimates for the OLS multivariate case. 
+\begin{IEEEeqnarray}{rCl}
+\varepsilon_{i} & = & y_{i} - \mathbf{x}_{i}\boldsymbol{\beta}\label{eq:ols1}\\
+\underset{\boldsymbol{\beta}}{\text{min}} \sum_{i=1}^{n}\varepsilon_{i}^{2}  & = & \underset{\boldsymbol{\beta}}{\text{min}} \ \boldsymbol{\varepsilon}^\intercal \boldsymbol{\varepsilon} \label{eq:ols2}\\
+& = & \underset{\boldsymbol{\beta}}{\text{min}} \ \left[\left(\mathbf{y} - \mathbf{X}\boldsymbol{\beta} \right)^\intercal \left(\mathbf{y} - \mathbf{X}\boldsymbol{\beta} \right)\right] \label{eq:ols3}\\
+& = & \underset{\boldsymbol{\beta}}{\text{min}} \ \left[\left(\mathbf{y}^\intercal - \boldsymbol{\beta}^\intercal \mathbf{X}^\intercal \right) \left(\mathbf{y} - \mathbf{X}\boldsymbol{\beta} \right)\right] \label{eq:ols4}\\
+& = & \underset{\boldsymbol{\beta}}{\text{min}} \ \left[\mathbf{y}^\intercal \mathbf{y} - \boldsymbol{\beta}^\intercal \mathbf{X}^\intercal \mathbf{y} - \mathbf{y}^\intercal \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\beta}^\intercal \mathbf{X}^\intercal \mathbf{X}\boldsymbol{\beta}\right] \label{eq:ols5}\\
+\frac{\partial \text{RSS}}{\partial \boldsymbol{\beta}}& = & - \mathbf{X}^\intercal \mathbf{y} - \left(\mathbf{y}^\intercal \mathbf{X}\right)^\intercal + \left(\mathbf{X}^\intercal \mathbf{X}\right)\boldsymbol{\beta} + \left( \mathbf{X}^\intercal \mathbf{X}\right)^\intercal \boldsymbol{\beta} \label{eq:ols6}\\
+& =  & - \mathbf{X}^\intercal \mathbf{y} - \mathbf{X}^\intercal \mathbf{y} + \mathbf{X}^\intercal \mathbf{X}\boldsymbol{\beta} + \mathbf{X}^\intercal \mathbf{X}\boldsymbol{\beta} \label{eq:ols7}\\
+& = & - 2\mathbf{X}^\intercal \mathbf{y} + 2\mathbf{X}^\intercal \mathbf{X}\boldsymbol{\beta} \label{eq:ols8}\\
+0 & = & - 2\mathbf{X}^\intercal \mathbf{y} + 2\mathbf{X}^\intercal \mathbf{X}\boldsymbol{\beta} \label{eq:ols9}\\
+2\mathbf{X}^\intercal \mathbf{y} & = & 2\mathbf{X}^\intercal \mathbf{X}\boldsymbol{\beta} \label{eq:ols10}\\
+\left(\mathbf{X}^\intercal \mathbf{X}\right)^{-1} \mathbf{X}^\intercal \mathbf{y} & = & \boldsymbol{\beta} \label{eq:ols11}
+\end{IEEEeqnarray}
+
+\begin{itemize}
+\item In equation~\ref{eq:ols1}, is $\mathbf{x}_{i}$ a column or row vector? How can you tell?
+\\
+\\
+\item In equation~\ref{eq:ols2}, why do we write $\boldsymbol{\varepsilon}^\intercal \boldsymbol{\varepsilon}$? What is this calculation doing? What are its dimensions?
+\\
+\\
+\\
+\item What are the dimensions of the quantity in equation~\ref{eq:ols3}?
+\\
+\\
+\item How did we get from equation~\ref{eq:ols3} to equation~\ref{eq:ols4}?
+\\
+\\
+\item What rule allowed us to get from equation~\ref{eq:ols4} to equation~\ref{eq:ols5}?
+\\
+\\
+\item Explain how we got each term in equation~\ref{eq:ols6}. How do we know that the matrices in the terms in equation~\ref{eq:ols6} are conformable?
+\\
+\\
+\\
+\\
+\\
+\item What rules allowed us to go from equation~\ref{eq:ols6} to equation~\ref{eq:ols7}?
+\\
+\\ 
+\item How did we get equation~\ref{eq:ols8}?
+\\
+\\
+\item Why did we set equation~\ref{eq:ols9} equal to zero?
+\\
+\\
+\item How did we get from equation~\ref{eq:ols9} to equation~\ref{eq:ols10}?
+\\
+\\
+\item What rule did we use to get from equation~\ref{eq:ols10} to equation~\ref{eq:ols11}?
+\\
+\\
+\end{itemize}
+
+
+
+
+\item Where $\mathbf{X} = \left[\begin{array}{cc}
+1 & 0 \\
+1 & 2 \end{array} \right]$ and $\mathbf{y}^\intercal = \left[
+\begin{array}{cc}
+0.3 & -0.5 
+\end{array} \right]$, find $\hat{\boldsymbol{\beta}} = \left(\mathbf{X}^\intercal \mathbf{X}\right)^{-1} \mathbf{X}^\intercal \mathbf{y} $.
+\begin{enumerate}
+\item What is $\mathbf{X}^\intercal$?
+\\
+\\
+\\
+\\
+\item What is $\mathbf{X}^\intercal \mathbf{X}$?
+\\
+\\
+\\
+\\
+\item What is $\left(\mathbf{X}^\intercal \mathbf{X}\right)^{-1}$?
+\\
+\\
+\\
+\\
+\item What is $\left(\mathbf{X}^\intercal \mathbf{X}\right)^{-1}\mathbf{X}^\intercal$?
+\\
+\\
+\\
+\\
+\item What is $\left(\mathbf{X}^\intercal \mathbf{X}\right)^{-1}\mathbf{X}^\intercal \mathbf{y}$?
+\end{enumerate}
+
+
+
+
+
+
+
+
+\end{enumerate}
+\end{document}
