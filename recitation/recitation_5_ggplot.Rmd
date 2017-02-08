@@ -1,0 +1,236 @@
+---
+title: "ggplot2"
+author: "Andrew S. Rosenberg"
+date: "2/7/2017"
+output: ioslides_presentation
+---
+
+```{r setup, include=FALSE}
+library(GLM)
+library(ggplot2)
+knitr::opts_chunk$set(echo = FALSE)
+housing <- load_dataset("landdata-states")
+```
+
+## What is ggplot?
+- it's a grammar for graphics
+- it uses consistent building blocks to produce pictures
+- it's really pretty looking, but can't do 3D or some other stuff (networks)
+
+## What is it good at?
+- Making hard plots in an easy, consistent way (more later)
+
+## What is it bad at?
+- 3D (use plot3D)
+- Network plots (use igraph instead)
+- Other things like extensive form games
+- simple plots
+
+## Base R
+
+```{r echo = TRUE}
+hist(housing$Home.Value)
+```
+
+## ggplot
+
+```{r echo = TRUE, fig.width=6, fig.height=4}
+ggplot(housing, aes(x = Home.Value)) + geom_histogram() + theme_bw()
+```
+
+## Harder Plot with Base R
+```{r echo=TRUE, fig.show='hide'}
+plot(Home.Value ~ Date,
+     data=subset(housing, State == "MA"))
+points(Home.Value ~ Date, col="red",
+       data=subset(housing, State == "TX"))
+legend(1975, 400000,
+       c("MA", "TX"), title="State",
+       col=c("black", "red"),
+       pch=c(1, 1))
+```
+
+## Harder Plot with ggplot
+```{r echo = TRUE, fig.show='hide'}
+ggplot(subset(housing, State %in% c("MA", "TX")),
+       aes(x = Date,
+           y = Home.Value,
+           color = State))+
+  geom_point()
+```
+
+## Aesthetic Mapping
+- In ggplot aesthetic means "something you can see" such as,  
+- position (i.e., on the x and y axes)
+- color ("outside" color)
+- fill ("inside" color)
+- shape (of points)
+- linetype
+- size
+
+## Geometric Object
+- These are the things we put on the plot.
+- points! (geom_point())
+- lines! (geom_line())
+- boxplots! (geom_boxplot())
+- There are many others and a plot must have at least one geom (why?)
+
+## Let's make a plot now
+```{r echo=TRUE, fig.show='hide'}
+hp2001Q1 <- subset(housing, Date == 2001.25) 
+ggplot(hp2001Q1,
+  aes(y = Structure.Cost, x = Land.Value)) +
+  geom_point() + theme_bw()
+```
+
+## Let's make a plot now
+```{r echo=FALSE}
+hp2001Q1 <- subset(housing, Date == 2001.25) 
+ggplot(hp2001Q1,
+  aes(y = Structure.Cost, x = Land.Value)) +
+  geom_point() + theme_bw()
+```
+
+## It is easy to transform variables
+```{r echo=TRUE, fig.show='hide'}
+hp2001Q1 <- subset(housing, Date == 2001.25) 
+ggplot(hp2001Q1,
+  aes(y = Structure.Cost, x = log(Land.Value))) +
+  geom_point() + theme_bw()
+```
+
+## It is easy to transform variables
+```{r echo=FALSE}
+hp2001Q1 <- subset(housing, Date == 2001.25) 
+ggplot(hp2001Q1,
+  aes(y = Structure.Cost, x = log(Land.Value))) +
+  geom_point() + theme_bw()
+```
+
+## We can do prediction lines too!
+- Let's say we have a bivariate relationship and we want to do OLS on it
+- We also want to plot the best fit line with some confidence intervals
+
+## OLS with lm results
+```{r echo = TRUE, fig.show='hide'}
+ggplot(hp2001Q1, aes(x = Land.Value, y = Structure.Cost)) +
+  geom_point() + stat_smooth(method = "lm", colour = "pink")
+```
+
+## OLS with lm results
+```{r echo = FALSE}
+ggplot(hp2001Q1, aes(x = Land.Value, y = Structure.Cost)) +
+  geom_point() + stat_smooth(method = "lm", colour = "pink")
+```
+
+## That looks insane!
+- let's log land value and see if it looks better
+```{r echo = TRUE, fig.show='hide'}
+ggplot(hp2001Q1, aes(x = log(Land.Value), y = Structure.Cost)) +
+  geom_point() + stat_smooth(method = "lm", colour = "pink")
+```
+
+## try again
+```{r echo = FALSE}
+ggplot(hp2001Q1, aes(x = log(Land.Value), y = Structure.Cost)) +
+  geom_point() + stat_smooth(method = "lm", colour = "pink")
+```
+
+## Another example: Coefficient Plot
+```{r echo = TRUE}
+mod1 <- lm(Structure.Cost ~ log(Land.Value) + Home.Price.Index, data = housing)
+coef_plot_data <- data.table::data.table(var = names(mod1$coefficients),
+  coef = mod1$coefficients,
+  lower = mod1$coefficients - abs(qnorm(0.025) * sqrt(diag(vcov(mod1)))),
+  upper = mod1$coefficients + abs(qnorm(0.025) * sqrt(diag(vcov(mod1)))))
+coef_p <- ggplot(coef_plot_data, aes(x = var, y = coef)) + geom_point() +
+  geom_errorbar(aes(ymin = lower, ymax = upper))
+```
+
+## Here's the coefficient plot
+```{r}
+coef_p
+```
+
+## Smoothers
+- Things aren't always linear
+- We can add smoothers to our plots
+- What is a smoother?
+
+## Smoother Example
+```{r echo = TRUE, fig.show='hide'}
+ggplot(hp2001Q1, aes(x = log(Land.Value), y = Structure.Cost)) +
+  geom_point() + geom_smooth(method = "loess")
+```
+
+## Smoother Example
+```{r echo = FALSE}
+ggplot(hp2001Q1, aes(x = log(Land.Value), y = Structure.Cost)) +
+  geom_point() + geom_smooth(method = "loess")
+```
+
+## Faceting
+- Sometimes we want to plot separate graphs for subsets of data
+- ggplot lets us do this with either facet_grid or facet_wrap
+- Let's us easily compare plots
+
+## Example
+```{r}
+p5 <- ggplot(housing, aes(x = Date, y = Home.Value))
+p5 + geom_line(aes(color = State)) + theme_bw()
+```
+
+## This plot is horrible
+- Why is it horrible?
+- How can we fix it?
+- Facet wrap or Facet grid!
+- Facet wrap defines subsets as levels of a single grouping variable (state)
+- Facet grid does the same but for two grouping variables
+
+## Here's how we make it meaningful
+```{r echo = TRUE, fig.show='hide'}
+p5 <- ggplot(housing, aes(x = Date, y = Home.Value))
+p6 <- p5 + geom_line() + theme_bw() +
+  facet_wrap(~State, ncol = 10) 
+```
+
+## What it looks like
+```{r fig.show='p6'}
+p6
+```
+
+## Themes
+- Themes are the backgrounds and other pretty, general features
+- There are lots of them
+- The original theme (theme_classic()) is horrible. Don't use it.
+- I like theme_bw and it's what I've used so far
+- I'll show you three more. All you do is add + theme_dark() or whatever
+
+## Theme Dark
+```{r echo = FALSE}
+p5 + geom_line(color = "pink") + 
+  facet_wrap(~State, ncol = 10) +
+  theme_dark()
+```
+
+## Theme Lined Raw
+```{r echo = FALSE}
+p5 + geom_line() + 
+  facet_wrap(~State, ncol = 10) +
+  theme_linedraw()
+```
+
+## Theme Minimal
+```{r echo = FALSE}
+p5 + geom_line() + 
+  facet_wrap(~State, ncol = 10) +
+  theme_minimal() + ggtitle("Here is an Example of a Title") 
+```
+
+## That should get you started
+- There are loads of things I didn't cover (obvs)
+- I didn't cover scales, colors, themes, titles
+- But once you know how to get started, it's easy to pick new stuff up
+- That's the magic of ggplot: once you are in the ecosystem, it's easy to add
+
+

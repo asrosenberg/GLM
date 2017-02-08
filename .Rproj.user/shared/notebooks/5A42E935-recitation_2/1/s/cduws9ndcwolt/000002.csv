@@ -1,9 +1,0 @@
-"0","```r
-bday_probs <- sapply(seq(2, 100, 1), simulate_birthday_problem, nsims = 1000)
-plot_data <- data.table(number_of_people_in_room = seq(2, 100, 1),
-  probability_of_two_sharing_bday = bday_probs)
-ggplot(plot_data, aes(x = number_of_people_in_room, 
-  y = probability_of_two_sharing_bday)) +
-  geom_point() + theme_bw() +
-  ggtitle(\"Birthday Problem Simulations\")
-```"

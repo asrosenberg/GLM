@@ -8,7 +8,7 @@
 load_dataset <- function(dataset)
 {
   file_name <- system.file("extdata", paste0(dataset,".csv"),
-    package = "causalA16")
+    package = "GLM")
   DATA <- read.csv(file_name)
 }
 
