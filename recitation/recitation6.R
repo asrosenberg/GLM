@@ -1,3 +1,6 @@
+library(data.table)
+# What does linear mean?
+
 n <- 500
 x1 <- rnorm(n)
 x2 <- rnorm(n)
@@ -13,3 +16,7 @@ plot(x2, y)
 plot(x3, y)
 plot(fitted(lm(y ~ x1 + x2 + x3)), resid(lm(y ~ x1 + x2 + x3)))
 plot(lm(y ~ x1 + x2 + x3))
+
+
+
+
