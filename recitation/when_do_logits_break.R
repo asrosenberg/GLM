@@ -1,9 +1,10 @@
-test_logit <- function(n, num_betas, which_coef_to_test)
+test_logit <- function(n, num_betas, which_coef_to_test, nsims)
 {
-  betas <- seq(from = -5, to = 5, by = 0.25)
+  betas <- seq(from = -3, to = 3, by = 0.25)
   betas <- sample(betas, num_betas)
-  coef_simulations <- replicate(1000, {
-    xs <- cbind(1, replicate(num_betas - 1, rnorm(n)))
+  coef_simulations <- replicate(nsims, {
+    xs <- cbind(1, replicate(num_betas - 1, rnorm(n, mean = 0, sd = 1)))
+    #xs <- cbind(1, replicate(num_betas - 1, runif(n, min = -10, max = 10)))
     probs <- plogis(xs %*% betas)
     y <- rbinom(n, 1, prob = probs)
     form <- as.formula(
@@ -18,6 +19,8 @@ test_logit <- function(n, num_betas, which_coef_to_test)
     ggtitle("When do Logits Break?") +
     xlab(paste("Coefficient", which_coef_to_test, sep = " ")) +
     # xlim(betas[which_coef_to_test] - 5, betas[which_coef_to_test] + 5) +
-    geom_vline(xintercept = betas[which_coef_to_test], colour = "red")
+    geom_vline(aes(xintercept = betas[which_coef_to_test], 
+      colour = paste("Coef", which_coef_to_test, "Truth"))) +
+    theme(legend.title = element_blank())
 }
-test_logit(n = 500, num_betas = 3, which_coef_to_test = 3)
+test_logit(n = 100, num_betas = 2, which_coef_to_test = 2, nsims = 1000)
