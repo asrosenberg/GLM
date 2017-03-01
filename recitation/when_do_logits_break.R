@@ -1,6 +1,6 @@
 test_logit <- function(n, num_betas, which_coef_to_test)
 {
-  betas <- seq(from = -5, to = 5, by = 0.5)
+  betas <- seq(from = -5, to = 5, by = 0.25)
   betas <- sample(betas, num_betas)
   coef_simulations <- replicate(1000, {
     xs <- cbind(1, replicate(num_betas - 1, rnorm(n)))
