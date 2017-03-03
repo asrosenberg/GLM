@@ -93,7 +93,9 @@ plot_data <- data.table(number_of_people_in_room = seq(2, 100, 1),
 ggplot(plot_data, aes(x = number_of_people_in_room, 
   y = probability_of_two_sharing_bday)) +
   geom_point() + theme_bw() +
-  ggtitle("Birthday Problem Simulations")
+  ggtitle("Birthday Problem Simulations") +
+  xlab("Number of People in a Room") +
+  ylab("Probability that any Two Share a Birthday")
 ```
 
 
