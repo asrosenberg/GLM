@@ -1,0 +1,109 @@
+\documentclass[12pt]{article}
+
+\usepackage{scrextend}
+\usepackage[T1]{fontenc}
+\usepackage{amsfonts, amsmath, amsthm, amssymb}
+\usepackage[top = 1in, left = 1in, right = 1in, bottom = 1in]{geometry}
+\usepackage{setspace}
+\usepackage[bookmarks = false, hidelinks]{hyperref}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{dcolumn}
+\usepackage{float}
+\usepackage{subcaption}
+\usepackage{siunitx}
+\usepackage[compact]{titlesec}
+\usepackage{listings}
+\usepackage{baskervald} % font
+\usepackage{enumitem}
+\usepackage{color}
+\usepackage[style = american]{csquotes}
+\usepackage[american]{babel}
+
+
+% Biblatex stuff
+\usepackage[backend = bibtex, natbib = true, mcite = true, style=chicago-authordate, citetracker = true, ibidtracker = true, sorting=nyt, url = true, language = american, maxbibnames = 99]{biblatex}
+%\usepackage{natbib}
+\bibliography{/Users/asrosenberg90/Dissertation/dissertation.bib}
+
+% Footnote formatting
+\setlist{nolistsep, noitemsep}
+\setlength{\footnotesep}{1.2\baselineskip}
+\deffootnote[.2in]{0in}{0em}{\normalsize\thefootnotemark.\enskip}
+
+\def\ci{\perp\!\!\!\perp}
+\titleformat*{\section}{\large\bfseries}
+\titleformat*{\subsection}{\normalsize\bfseries}
+
+\makeatletter
+
+\makeatother
+
+\pagestyle{plain}
+
+\begin{document}
+
+\title{\LARGE{Title Here}}
+
+
+
+ \author{Andrew S. Rosenberg\thanks{
+  The Ohio State University. Electronic Address:
+  \texttt{rosenberg.1108@osu.edu}.
+}}
+
+\date{\today}
+
+\maketitle
+
+
+\begin{abstract} \singlespacing
+\noindent Kick-ass abstract here
+\end{abstract}
+
+\thispagestyle{empty}
+\centerline{\textbf{Word Count: 5}}
+
+\newpage
+\setcounter{page}{1}
+\doublespacing
+
+\section*{Introduction}
+\citet{Gelman1996} tells us that we should be Bayesians, but we'll use a linear model anyway. You can see the results in Table~\ref{table:coefficients}. \citet{Keele2015} says stuff about causal inference. Natural experiments are \emph{great} \citep{Dunning2012}
+
+\begin{table}
+\begin{center}
+\begin{tabular}{l D{.}{.}{2.5} }
+\toprule
+ & \multicolumn{1}{c}{Model 1} \\
+\midrule
+(Intercept)                & 34.21^{***} \\
+                           & (2.82)      \\
+Displacement (cu.in.)      & 0.00        \\
+                           & (0.01)      \\
+Gross Horsepower           & -0.04^{**}  \\
+                           & (0.01)      \\
+Transmission (1 = manual) & 2.16        \\
+                           & (1.44)      \\
+Weight                     & -3.05^{*}   \\
+                           & (1.16)      \\
+\midrule
+R$^2$                      & 0.84        \\
+Adj. R$^2$                 & 0.82        \\
+Num. obs.                  & 32          \\
+RMSE                       & 2.58        \\
+\bottomrule
+\multicolumn{2}{l}{\scriptsize{$^{***}p<0.001$, $^{**}p<0.01$, $^*p<0.05$}}
+\end{tabular}
+\caption{Here's a model for miles per gallon. It's pretty good.}
+\label{table:coefficients}
+\end{center}
+\end{table}
+
+\clearpage
+
+\singlespacing
+
+\printbibliography
+
+\end{document}
